@@ -1,0 +1,67 @@
+﻿@* @model MyPortfolio.ViewModels.Home.ProjectDetailsViewModel
+
+@{
+    ViewData["Title"] = Model.Project.Title;
+}
+
+<div class="project-details min-h-screen bg-gray-900 text-white py-12">
+    <div class="container mx-auto px-4">
+        <nav class="mb-8">
+            <a href="@Url.Action("Index")" class="text-blue-400 hover:text-blue-300">
+                ← Back to Projects
+            </a>
+        </nav>
+
+        <div class="bg-gray-800 rounded-lg overflow-hidden shadow-xl">
+            @if (Model.ProjectImages.Any())
+            {
+                <div class="relative h-96">
+                    <div class="flex overflow-x-auto snap-x snap-mandatory h-full">
+                        @foreach (var image in Model.ProjectImages)
+                        {
+                            <div class="snap-center shrink-0 w-full h-full">
+                                <img src="@image.ImageUrl"
+                                     alt="@Model.Project.Title"
+                                     class="w-full h-full object-cover" />
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+
+            <div class="p-8">
+                <h1 class="text-4xl font-bold mb-4">@Model.Project.Title</h1>
+
+                <div class="flex flex-wrap gap-2 mb-6">
+                    @foreach (var skill in Model.RelatedSkills)
+                    {
+                        <span class="px-3 py-1 bg-blue-600 rounded-full text-sm">@skill.Name</span>
+                    }
+                </div>
+
+                <div class="prose prose-invert max-w-none mb-8">
+                    @Html.Raw(Model.Project.Description)
+                </div>
+
+                @if (!string.IsNullOrEmpty(Model.Project.LiveUrl))
+                {
+                    <a href="@Model.Project.LiveUrl"
+                       target="_blank"
+                       class="inline-block bg-green-600 text-white px-6 py-3 rounded-lg mr-4 hover:bg-green-700 transition-colors">
+                        View Live Project
+                    </a>
+                }
+
+                @if (!string.IsNullOrEmpty(Model.Project.LiveUrl))
+                {
+                    <a href="@Model.Project.LiveUrl"
+                       target="_blank"
+                       class="inline-block bg-gray-700 text-white px-6 py-3 rounded-lg hover:bg-gray-600 transition-colors">
+                        View Source Code
+                    </a>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+ *@

@@ -1,0 +1,40 @@
+﻿<!-- Views/Projects/Index.cshtml -->
+@model IEnumerable<MyPortfolio.Models.Project>
+
+@{
+    ViewData["Title"] = "Projects";
+}
+
+<div class="projects-container min-h-screen bg-gray-900 text-white py-12">
+    <div class="container mx-auto px-4">
+        <h1 class="text-4xl font-bold mb-8 text-center">My Projects</h1>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            @foreach (var project in Model)
+            {
+                <div class="bg-gray-800 rounded-lg overflow-hidden shadow-lg transition-transform duration-300 hover:transform hover:scale-105">
+                    @if (project.ProjectImages.Any())
+                    {
+                        <img src="@project.ProjectImages.First().ImageUrl"
+                             alt="@project.Title"
+                             class="w-full h-48 object-cover" />
+                    }
+                    <div class="p-6">
+                        <h2 class="text-xl font-semibold mb-2">@project.Title</h2>
+                        <p class="text-gray-400 mb-4">@project.Description.Substring(0, Math.Min(100, project.Description.Length))...</p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            @foreach (var skill in project.ProjectSkills.Take(3))
+                            {
+                                <span class="px-3 py-1 bg-blue-600 rounded-full text-sm">@skill.Name </span>
+                            }
+                        </div>
+                        <a href="@Url.Action("Details", new { id = project.Id })"
+                           class="inline-block bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                            View Details
+                        </a>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

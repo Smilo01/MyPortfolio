@@ -1,0 +1,142 @@
+﻿<!DOCTYPE html>
+<html lang="en" class="h-100">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Professional portfolio of Zikhali Similo - Developer and Technology Professional" />
+    <meta name="author" content="Zikhali Similo" />
+
+    <title>@ViewData["Title"] - Zikhali Similo Portfolio</title>
+
+    <!-- Preload critical assets -->
+    <link rel="preload" href="~/lib/bootstrap/dist/css/bootstrap.min.css" as="style" />
+    <link rel="preload" href="~/css/site.css" as="style" />
+    <link rel="preload" href="~/images/logo.png" as="image" />
+
+    <!-- CSS files -->
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+          integrity="sha384-[YOUR-SHA-384-HASH]" crossorigin="anonymous" />
+
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+<body class="d-flex flex-column h-100">
+    <a href="#main-content" class="visually-hidden-focusable">Skip to main content</a>
+
+    <header class="header-nav">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark border-bottom shadow-sm fixed-top">
+            <div class="container">
+                <a class="navbar-brand d-flex align-items-center" asp-area="" asp-controller="Home" asp-action="Index">
+                    <img src="~/images/logo.png" alt="" width="30" height="30" class="me-2" />
+                    <span>Zikhali Similo</span>
+                </a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        @{
+                            var currentAction = ViewContext.RouteData.Values["Action"]?.ToString();
+                            var menuItems = new[] {
+                        ("Home", "Index", "Home"),
+                        ("Projects", "Index", "Projects"),
+                        ("Contact", "Index", "Contact"),
+                        ("Admin", "Index", "Admin")
+                        };
+                        }
+                        @foreach (var (label, action, controller) in menuItems)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link @(currentAction == action ? "active" : "")"
+                                   asp-controller="@controller" asp-action="@action">@label</a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main id="main-content" class="flex-shrink-0 mt-5 pt-4" role="main">
+        <div class="container">
+            @if (TempData["SuccessMessage"] != null || TempData["ErrorMessage"] != null)
+            {
+                <div id="notification-area" role="alert" aria-live="polite">
+                    @if (TempData["SuccessMessage"] != null)
+                    {
+                        <div class="alert alert-success alert-dismissible fade show">
+                            <i class="fas fa-check-circle me-2"></i>@TempData["SuccessMessage"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+                    @if (TempData["ErrorMessage"] != null)
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show">
+                            <i class="fas fa-exclamation-circle me-2"></i>@TempData["ErrorMessage"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+                </div>
+            }
+
+            @RenderBody()
+        </div>
+    </main>
+
+    <footer class="footer mt-auto py-3 bg-light">
+        <div class="container">
+            <div class="row gy-4">
+                <div class="col-md-4">
+                    <h5 class="text-dark">Contact Information</h5>
+                    <ul class="list-unstyled">
+                        <li>
+                            <a href="mailto:zikhalismilo01@gmail.com" class="text-decoration-none">
+                                <i class="fas fa-envelope me-2"></i>zikhalismilo01@gmail.com
+                            </a>
+                        </li>
+                        <li>
+                            <a href="tel:+27711088484" class="text-decoration-none">
+                                <i class="fas fa-phone me-2"></i>(+27) 711088484
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h5 class="text-dark">Connect With Me</h5>
+                    <div class="social-links">
+                        <a href="https://github.com/" target="_blank" rel="noopener"
+                           class="btn btn-outline-dark me-2" aria-label="GitHub Profile">
+                            <i class="fab fa-github"></i>
+                        </a>
+                        <a href="https://linkedin.com/in/yourprofile" target="_blank" rel="noopener"
+                           class="btn btn-outline-dark me-2" aria-label="LinkedIn Profile">
+                            <i class="fab fa-linkedin"></i>
+                        </a>
+                        <a href="https://twitter.com/yourhandle" target="_blank" rel="noopener"
+                           class="btn btn-outline-dark" aria-label="Twitter Profile">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <p class="mb-0">
+                        &copy; @DateTime.Now.Year Zikhali Similo
+                        <a asp-area="" asp-controller="Home" asp-action="Privacy" class="text-decoration-none">Privacy Policy</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript files -->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

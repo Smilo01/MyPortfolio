@@ -1,0 +1,137 @@
+﻿@using MyPortfolio.Models
+@{
+    ViewData["Title"] = "Home";
+}
+
+<!-- Hero Section -->
+<section class="hero-section py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 mb-4 mb-lg-0">
+                <h1 class="display-4 fw-bold text-gradient mb-3">Zikhali Similo</h1>
+                <p class="lead mb-4">Passionate Software Developer crafting elegant solutions for complex problems</p>
+                <div class="mb-4">
+                    <p class="text-muted">Specializing in full-stack development with expertise in .NET, React, and cloud technologies.</p>
+                </div>
+                <div class="d-flex gap-3">
+                    <a href="@Url.Action("Index", "Projects")" class="btn btn-primary btn-lg">View Projects</a>
+                    <a href="@Url.Action("Index", "Contact")" class="btn btn-outline-primary btn-lg">Get in Touch</a>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="code-window">
+                    <div class="code-header">
+                        <span class="dot red"></span>
+                        <span class="dot yellow"></span>
+                        <span class="dot green"></span>
+                    </div>
+                    <div class="code-content">
+                        <pre><code>class Developer {
+    name = "Zikhali Similo";
+    type = "Full Stack Developer";
+    languages = [
+        "C#", "JavaScript",
+        "Python", "SQL"
+    ];
+    passions = [
+        "Clean Code",
+        "Problem Solving",
+        "User Experience"
+    ];
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Skills Section -->
+<section class="skills-section py-5 bg-light">
+    <div class="container">
+        <h2 class="text-center mb-5">Technical Expertise</h2>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center">
+                        <div class="icon-wrapper mb-3">
+                            <i class="fas fa-code fa-2x text-primary"></i>
+                        </div>
+                        <h3 class="h5">Backend Development</h3>
+                        <p class="card-text">.NET Core, C#, SQL Server, RESTful APIs</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center">
+                        <div class="icon-wrapper mb-3">
+                            <i class="fas fa-laptop-code fa-2x text-primary"></i>
+                        </div>
+                        <h3 class="h5">Frontend Development</h3>
+                        <p class="card-text">React, JavaScript, HTML5, CSS3, Bootstrap</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center">
+                        <div class="icon-wrapper mb-3">
+                            <i class="fas fa-cloud fa-2x text-primary"></i>
+                        </div>
+                        <h3 class="h5">Cloud & DevOps</h3>
+                        <p class="card-text">Azure, Docker, CI/CD, Git</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Work Section -->
+<section class="featured-work py-5">
+    <div class="container">
+        <div class="row align-items-center mb-5">
+            <div class="col-lg-6">
+                <h2 class="mb-3">Featured Projects</h2>
+                <p class="lead">Take a look at some of my recent work</p>
+            </div>
+            <div class="col-lg-6 text-lg-end">
+                <a href="@Url.Action("Index", "Projects")" class="btn btn-outline-primary">View All Projects</a>
+            </div>
+        </div>
+        <div class="row g-4" id="featured-projects">
+            <!-- Projects will be loaded here -->
+        </div>
+    </div>
+</section>
+<script>
+    // Load featured projects
+    $(document).ready(function() {
+        $.get('@Url.Action("GetFeaturedProjects", "Home")', function(projects) {
+            const container = $('#featured-projects');
+            projects.forEach(project => {
+                container.append(`
+                    <div class="col-md-6 col-lg-4">
+                        <div class="card h-100 border-0 shadow-sm">
+                            <img src="${project.imageUrl}" class="card-img-top" alt="${project.title}">
+                            <div class="card-body">
+                                <h5 class="card-title">${project.title}</h5>
+                                <p class="card-text">${project.description}</p>
+                                <a href="/Projects/Details/${project.id}" class="btn btn-outline-primary">Learn More</a>
+                            </div>
+                        </div>
+                    </div>
+                `);
+            });
+        });
+    });
+</script>
+    
+   
+
+    
+
+
+    
+

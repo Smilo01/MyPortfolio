@@ -1,0 +1,322 @@
+﻿@{
+    ViewData["Title"] = "Dashboard";
+    Layout = "_AdminLayout";
+}
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+    <h1 class="h2">Dashboard</h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <div class="btn-group me-2">
+            <a asp-controller="Projects" asp-action="Create" asp-area="Admin" class="btn btn-sm btn-outline-primary">
+                <i class="fas fa-plus"></i> New Project
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Stats Card - Projects -->
+    <div class="col-md-4 mb-4">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-muted fw-normal mt-0">Total Projects</h6>
+                        <h3 class="mt-2 mb-2">@ViewBag.ProjectCount</h3>
+                        <p class="mb-0 text-muted">
+                            <span class="text-success me-2"><i class="fas fa-arrow-up"></i> @ViewBag.NewProjectsCount</span>
+                            <span class="text-nowrap">Since last month</span>
+                        </p>
+                    </div>
+                    <div class="stats-icon bg-primary rounded-circle">
+                        <i class="fas fa-project-diagram text-white fa-fw fa-lg"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Card - Skills -->
+    <div class="col-md-4 mb-4">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-muted fw-normal mt-0">Total Skills</h6>
+                        <h3 class="mt-2 mb-2">@ViewBag.SkillCount</h3>
+                        <p class="mb-0 text-muted">
+                            <span class="text-primary">Primary skill: @ViewBag.TopSkill</span>
+                        </p>
+                    </div>
+                    <div class="stats-icon bg-success rounded-circle">
+                        <i class="fas fa-tools text-white fa-fw fa-lg"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Card - Messages -->
+    <div class="col-md-4 mb-4">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-muted fw-normal mt-0">Unread Messages</h6>
+                        <h3 class="mt-2 mb-2">@ViewBag.UnreadCount</h3>
+                        <p class="mb-0 text-muted">
+                            <span class="text-danger me-2"><i class="fas fa-clock"></i> @ViewBag.RecentMessages</span>
+                            <span class="text-nowrap">In the last 7 days</span>
+                        </p>
+                    </div>
+                    <div class="stats-icon bg-danger rounded-circle">
+                        <i class="fas fa-envelope text-white fa-fw fa-lg"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Recent Projects -->
+    <div class="col-lg-6 mb-4">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Recent Projects</h5>
+                <a asp-controller="Projects" asp-action="Index" asp-area="Admin" class="btn btn-sm btn-outline-primary">View All</a>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Category</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var project in ViewBag.RecentProjects ?? new List<Project>())
+                            {
+                                <tr>
+                                    <td>@project.Title</td>
+                                    <td>@(project.Category?.Name ?? "Uncategorized")</td>
+                                    <td>@project.CreatedDate.ToString("MMM dd, yyyy")</td>
+                                    <td>
+                                        <a asp-controller="Projects" asp-action="Edit" asp-area="Admin" asp-route-id="@project.Id"
+                                           class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Messages -->
+    <div class="col-lg-6 mb-4">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Recent Messages</h5>
+                <a asp-controller="Messages" asp-action="Index" asp-area="Admin" class="btn btn-sm btn-outline-primary">View All</a>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Subject</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var message in ViewBag.RecentMessages ?? new List<Message>())
+                            {
+                                <tr>
+                                    <td>@message.SenderName</td>
+                                    <td>@(message.Subject?.Length > 25 ? message.Subject.Substring(0, 22) + "..." : message.Subject)</td>
+                                    <td>@message.CreatedDate.ToString("MMM dd, yyyy")</td>
+                                    <td>
+                                        @if (!message.IsRead)
+                                        {
+                                            <span class="badge bg-danger">Unread</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-success">Read</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <a asp-controller="Messages" asp-action="Details" asp-area="Admin" asp-route-id="@message.Id"
+                                           class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Activity Timeline -->
+    <div class="col-lg-8 mb-4">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white">
+                <h5 class="mb-0">Recent Activity</h5>
+            </div>
+            <div class="card-body">
+                <div class="timeline">
+                    @foreach (var activity in ViewBag.RecentActivities ?? new List<Activity>())
+                    {
+                        <div class="timeline-item">
+                            <div class="timeline-item-marker">
+                                @switch (activity.Type.ToLower())
+                                {
+                                    case "project":
+                                        <div class="timeline-item-marker-indicator bg-primary">
+                                            <i class="fas fa-code text-white"></i>
+                                        </div>
+                                        break;
+                                    case "message":
+                                        <div class="timeline-item-marker-indicator bg-danger">
+                                            <i class="fas fa-envelope text-white"></i>
+                                        </div>
+                                        break;
+                                    case "skill":
+                                        <div class="timeline-item-marker-indicator bg-success">
+                                            <i class="fas fa-tools text-white"></i>
+                                        </div>
+                                        break;
+                                    default:
+                                        <div class="timeline-item-marker-indicator bg-info">
+                                            <i class="fas fa-info text-white"></i>
+                                        </div>
+                                        break;
+                                }
+                                <div class="timeline-item-marker-date">@activity.Timestamp.ToString("MMM dd")</div>
+                            </div>
+                            <div class="timeline-item-content pt-0">
+                                <div class="timeline-item-content-title fw-bold">
+                                    @activity.Title
+                                </div>
+                                <div class="timeline-item-content-desc text-muted">
+                                    @activity.Description
+                                </div>
+                                <div class="timeline-item-content-time small text-muted mt-1">
+                                    @activity.Timestamp.ToString("hh:mm tt")
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    @if (!(ViewBag.RecentActivities?.Any() ?? false))
+                    {
+                        <div class="text-center text-muted py-4">
+                            <i class="fas fa-info-circle me-1"></i> No recent activities to display
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions and System Info -->
+    <div class="col-lg-4 mb-4">
+        <!-- Quick Actions -->
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-white">
+                <h5 class="mb-0">Quick Actions</h5>
+            </div>
+            <div class="card-body">
+                <div class="list-group">
+                    <a asp-controller="Projects" asp-action="Create" asp-area="Admin" class="list-group-item list-group-item-action">
+                        <div class="d-flex align-items-center">
+                            <div class="action-icon bg-primary text-white rounded-circle me-3">
+                                <i class="fas fa-plus"></i>
+                            </div>
+                            <div>
+                                Add New Project
+                                <div class="small text-muted">Create a new portfolio item</div>
+                            </div>
+                        </div>
+                    </a>
+                    <a asp-controller="Skills" asp-action="Create" asp-area="Admin" class="list-group-item list-group-item-action">
+                        <div class="d-flex align-items-center">
+                            <div class="action-icon bg-success text-white rounded-circle me-3">
+                                <i class="fas fa-plus"></i>
+                            </div>
+                            <div>
+                                Add New Skill
+                                <div class="small text-muted">Add a skill to your portfolio</div>
+                            </div>
+                        </div>
+                    </a>
+                    <a asp-controller="Profile" asp-action="Edit" asp-area="Admin" class="list-group-item list-group-item-action">
+                        <div class="d-flex align-items-center">
+                            <div class="action-icon bg-info text-white rounded-circle me-3">
+                                <i class="fas fa-user-edit"></i>
+                            </div>
+                            <div>
+                                Update Profile
+                                <div class="small text-muted">Edit your personal information</div>
+                            </div>
+                        </div>
+                    </a>
+                    <a asp-controller="Settings" asp-action="Index" asp-area="Admin" class="list-group-item list-group-item-action">
+                        <div class="d-flex align-items-center">
+                            <div class="action-icon bg-secondary text-white rounded-circle me-3">
+                                <i class="fas fa-cog"></i>
+                            </div>
+                            <div>
+                                Site Settings
+                                <div class="small text-muted">Configure site preferences</div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- System Info -->
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white">
+                <h5 class="mb-0">System Info</h5>
+            </div>
+            <div class="card-body">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                        <span>Last Backup</span>
+                        <span class="badge bg-light text-dark">@ViewBag.LastBackup</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                        <span>Server Status</span>
+                        <span class="badge bg-success">Online</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                        <span>Portfolio Version</span>
+                        <span class="badge bg-light text-dark">@ViewBag.PortfolioVersion</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                        <span>Last Login</span>
+                        <span class="badge bg-light text-dark">@ViewBag.LastLogin</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
